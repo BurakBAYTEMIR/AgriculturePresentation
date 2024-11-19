@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AgriculturePresentation.Business.Abstract;
+using AgriculturePresentation.Business.ValidationRules;
 using AgriculturePresentation.Entities.Concrete;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AgriculturePresentation.UI.Controllers
@@ -29,15 +31,55 @@ namespace AgriculturePresentation.UI.Controllers
         [HttpPost]
         public IActionResult AddTeam(Team team)
         {
-            _teamService.Insert(team);
-            return View("Index");
+            TeamValidator validationRules = new TeamValidator();
+            ValidationResult result = validationRules.Validate(team);
+            if (result.IsValid)
+            {
+                _teamService.Insert(team);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+            }
+            return View();
         }
 
         public IActionResult DeleteTeam(int id)
         {
             var value = _teamService.GetById(id);
             _teamService.Delete(value);
-            return View("Index");
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult EditTeam(int id)
+        {
+            var value = _teamService.GetById(id);
+            return View(value);
+        }
+
+        [HttpPost]
+        public IActionResult EditTeam(Team team)
+        {
+            TeamValidator validationRules = new TeamValidator();
+            ValidationResult result = validationRules.Validate(team);
+            if (result.IsValid)
+            {
+                _teamService.Update(team);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+            }
+            return View();
         }
     }
 }
