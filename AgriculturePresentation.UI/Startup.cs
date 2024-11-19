@@ -8,6 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AgriculturePresentation.Business.Abstract;
+using AgriculturePresentation.Business.Concrete;
+using AgriculturePresentation.DataAccess.Abstract;
+using AgriculturePresentation.DataAccess.Concrete.EntityFramework;
+using AgriculturePresentation.DataAccess.Contexts;
 
 namespace AgriculturePresentation.UI
 {
@@ -23,6 +28,13 @@ namespace AgriculturePresentation.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IServiceService, ServiceManager>();
+            services.AddScoped<IServiceDal, EfServiceDal>();
+
+            services.AddScoped<ITeamService, TeamManager>();
+            services.AddScoped<ITeamDal, EfTeamDal>();
+
+            services.AddDbContext<AgriculturePresentationContext>();
             services.AddControllersWithViews();
         }
 
