@@ -4,14 +4,16 @@ using AgriculturePresentation.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AgriculturePresentation.DataAccess.Migrations
 {
     [DbContext(typeof(AgriculturePresentationContext))]
-    partial class AgriculturePresentationContextModelSnapshot : ModelSnapshot
+    [Migration("20241125132607_mig_add_service_class")]
+    partial class mig_add_service_class
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
