@@ -1,10 +1,16 @@
-﻿using AgriculturePresentation.Business.Abstract;
+﻿
+using AgriculturePresentation.Business.Abstract;
 using AgriculturePresentation.Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AgriculturePresentation.UI.Controllers
 {
+    [AllowAnonymous]
     public class DefaultController : Controller
     {
         private readonly IContactService _contactService;
@@ -18,7 +24,6 @@ namespace AgriculturePresentation.UI.Controllers
         {
             return View();
         }
-
         [HttpGet]
         public PartialViewResult SendMessage()
         {
@@ -32,7 +37,6 @@ namespace AgriculturePresentation.UI.Controllers
             _contactService.Insert(contact);
             return RedirectToAction("Index", "Default");
         }
-
         public PartialViewResult ScriptPartial()
         {
             return PartialView();

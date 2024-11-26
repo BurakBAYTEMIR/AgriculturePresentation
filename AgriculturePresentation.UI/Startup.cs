@@ -13,6 +13,12 @@ using AgriculturePresentation.Business.Concrete;
 using AgriculturePresentation.DataAccess.Abstract;
 using AgriculturePresentation.DataAccess.Concrete.EntityFramework;
 using AgriculturePresentation.DataAccess.Contexts;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using AgriculturePresentation.Business.Container;
 
 namespace AgriculturePresentation.UI
 {
@@ -28,32 +34,29 @@ namespace AgriculturePresentation.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IServiceService, ServiceManager>();
-            services.AddScoped<IServiceDal, EfServiceDal>();
-
-            services.AddScoped<ITeamService, TeamManager>();
-            services.AddScoped<ITeamDal, EfTeamDal>();
-
-            services.AddScoped<IAnnouncementService, AnnouncementManager>();
-            services.AddScoped<IAnnouncementDal, EfAnnouncementDal>();
-
-            services.AddScoped<IImageService, ImageManager>();
-            services.AddScoped<IImageDal, EfImageDal>();
-
-            services.AddScoped<IAddressService, AddressManager>();
-            services.AddScoped<IAddressDal, EfAddressDal>();
-
-            services.AddScoped<IContactService, ContactManager>();
-            services.AddScoped<IContactDal, EfContactDal>();
-
-            services.AddScoped<ISocialMediaService, SocialMediaManager>();
-            services.AddScoped<ISocialMediaDal, EfSocialMediaDal>();
-
-            services.AddScoped<IAboutService, AboutManager>();
-            services.AddScoped<IAboutDal, EfAboutDal>();
-
             services.AddDbContext<AgriculturePresentationContext>();
+
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AgriculturePresentationContext>();
+
+            services.ContainerDependencies();
+
             services.AddControllersWithViews();
+
+            services.AddMvc(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
+
+            services.AddMvc();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(x =>
+                {
+                    x.LoginPath = "/Login/Index/";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +74,8 @@ namespace AgriculturePresentation.UI
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseRouting();
 
