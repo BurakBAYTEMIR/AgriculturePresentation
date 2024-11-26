@@ -1,1 +1,1 @@
-# AgriculturePresentation
+.Net 5 ve code first yapısı ile yazdığım katmanlı mimari projesi. Proje de admin panel ve bi web tasarımı var. Hazır template kullnılarak yapıldı. Identity kütüphanesi kullanıldı. Sql ile yazıldı. Proje tam anlamıyla bitmedi ufak pürüzleri var. Çalışmasından yana sıkıntı yok ama.
